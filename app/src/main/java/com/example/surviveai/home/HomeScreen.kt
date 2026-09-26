@@ -54,7 +54,9 @@
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun SurviveAiHomeScreen(){
+    fun SurviveAiHomeScreen(
+        onDisasterModeActivate : () -> Unit
+    ){
 
         val context = LocalContext.current // gives compose code access to location environment
 
@@ -271,9 +273,7 @@
 
             // DISASTER MODE  CARD ->
                 DisasterModeCard(
-                    onActivate = {
-                        //Disaster mode functionality will be added here
-                    }
+                    onActivate = onDisasterModeActivate
                 )
 
                 //QUICK ACTIONS CARD ->
