@@ -46,7 +46,7 @@ fun OfflineAiCard(
                 modifier = Modifier.fillMaxWidth()
             ){
                 Text(
-                    text = "OPEN AI"
+                    text = "OPEN"
                 )
             }
         }

@@ -12,6 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.surviveai.disaster.DisasterModeScreen
 import com.example.surviveai.home.SurviveAiHomeScreen
+import com.example.surviveai.sos.SOSScreen
+import com.example.surviveai.sos.EmergencyContactsScreen
+import com.example.surviveai.sos.SOSLocationManager
+import com.example.surviveai.sos.SOSMessageBuilder
 
 class MainActivity : ComponentActivity() {
 
@@ -27,16 +31,77 @@ class MainActivity : ComponentActivity() {
                         mutableStateOf(false)
                     }
 
+                    var sosActive by remember{
+                        mutableStateOf(false)
+                    }
+
+                    var emergencyContactsActive by remember{
+                        mutableStateOf(false)
+                    }
+
+                    var sosLocationMessage by remember{
+                        mutableStateOf("Location not retrieved yet")
+                    }
+
+                    val context = this@MainActivity
+
+                    val sosLocationManager = remember{
+                        SOSLocationManager(context)
+                    }
+
                     if(disasterModeActive){
                         DisasterModeScreen(
                         onExit = {
                             disasterModeActive = false
                         }
                         )
-                    }else{
+                    }else if(sosActive){
+                        SOSScreen(
+                            onBack = {
+                                sosActive = false
+                            },
+                            onActivateSOS = {
+                                sosLocationMessage = "Getting current location...."
+
+                                sosLocationManager.getCurrentLocation(
+                                    onLocationReceived = { location ->
+
+                                        if(location != null){
+                                            val message = SOSMessageBuilder.buildMessage(location)
+
+                                            sosLocationMessage = message
+                                        } else{
+                                            sosLocationMessage = "Unable to get location"
+                                        }
+
+                                    },
+                                    onError = {
+                                        sosLocationMessage = "Location permission is required"
+                                    }
+                                )
+                            },
+                            onManageContacts = {
+                                sosActive = false
+                                emergencyContactsActive = true
+                            },
+                            locationMessage = sosLocationMessage
+                        )
+                    }
+
+                    else if(emergencyContactsActive){
+                        EmergencyContactsScreen(
+                            onBack = {
+                                emergencyContactsActive = false
+                            }
+                        )
+                    }
+                    else{
                         SurviveAiHomeScreen(
                             onDisasterModeActivate = {
                                 disasterModeActive = true
+                            },
+                            onSosClick = {
+                                sosActive = true
                             }
                         )
                     }

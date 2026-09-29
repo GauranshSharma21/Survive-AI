@@ -55,7 +55,8 @@
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SurviveAiHomeScreen(
-        onDisasterModeActivate : () -> Unit
+        onDisasterModeActivate : () -> Unit,
+        onSosClick : () -> Unit
     ){
 
         val context = LocalContext.current // gives compose code access to location environment
@@ -278,9 +279,7 @@
 
                 //QUICK ACTIONS CARD ->
                 QuickActions(
-                    onSosClick = {
-                        //SOS functionality will be added later
-                    },
+                    onSosClick = onSosClick,
 
                     onFlashlightClick = {
                         //Flashlight functionality will be added later
