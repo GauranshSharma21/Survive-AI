@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import android.annotation.SuppressLint
 
 
 class SOSLocationManager(
@@ -17,6 +18,7 @@ class SOSLocationManager(
     private val fusedLocationClient =
         LocationServices.getFusedLocationProviderClient(context)
 
+    @SuppressLint("MissingPermission")
     fun getCurrentLocation(
         onLocationReceived: (Location?) -> Unit,
         onError: () -> Unit

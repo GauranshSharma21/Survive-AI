@@ -16,6 +16,8 @@ import com.example.surviveai.sos.SOSScreen
 import com.example.surviveai.sos.EmergencyContactsScreen
 import com.example.surviveai.sos.SOSLocationManager
 import com.example.surviveai.sos.SOSMessageBuilder
+import com.example.surviveai.sos.EmergencyContactStore
+import com.example.surviveai.sos.SOSMessageSender
 
 class MainActivity : ComponentActivity() {
 
@@ -49,6 +51,16 @@ class MainActivity : ComponentActivity() {
                         SOSLocationManager(context)
                     }
 
+                    val emergencyContactStore = remember {
+                        EmergencyContactStore(context)
+                    }
+
+                    val sosMessageSender = remember {
+                        SOSMessageSender(context)
+                    }
+
+
+
                     if(disasterModeActive){
                         DisasterModeScreen(
                         onExit = {
@@ -70,6 +82,25 @@ class MainActivity : ComponentActivity() {
                                             val message = SOSMessageBuilder.buildMessage(location)
 
                                             sosLocationMessage = message
+
+                                            val contacts = emergencyContactStore.getContacts()
+
+                                            if(contacts.isEmpty()){
+                                                sosLocationMessage = "No emergency contact saved"
+                                            }else{
+                                                //for now, we are using the first saved contact
+                                                val firstContact = contacts.first()
+
+                                                //opening the SMS app with the number and message
+
+                                                sosMessageSender.openSmsApp(
+                                                    phoneNumber = firstContact.phoneNumber,
+                                                    message = message,
+                                                    onSmsAppNotFound = {
+                                                        sosLocationMessage = "No sms found on this device"
+                                                    }
+                                                )
+                                            }
                                         } else{
                                             sosLocationMessage = "Unable to get location"
                                         }
