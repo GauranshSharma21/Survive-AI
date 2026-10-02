@@ -56,7 +56,8 @@
     @Composable
     fun SurviveAiHomeScreen(
         onDisasterModeActivate : () -> Unit,
-        onSosClick : () -> Unit
+        onSosClick : () -> Unit,
+        onFlashlightClick: () -> Unit
     ){
 
         val context = LocalContext.current // gives compose code access to location environment
@@ -282,7 +283,7 @@
                     onSosClick = onSosClick,
 
                     onFlashlightClick = {
-                        //Flashlight functionality will be added later
+                        onFlashlightClick()
                     },
 
                     onSirenClick = {

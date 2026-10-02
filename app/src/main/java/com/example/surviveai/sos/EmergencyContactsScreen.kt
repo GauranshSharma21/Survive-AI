@@ -135,6 +135,24 @@ fun EmergencyContactsScreen(
                             text = contact.phoneNumber,
                             style = MaterialTheme.typography.bodyMedium
                         )
+
+                        Button(
+                            onClick = {
+
+                                contactStore.deleteContact(
+                                    contact.phoneNumber
+                                )
+
+                                contacts =
+                                    contactStore.getContacts()
+                            },
+
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ){
+                            Text("REMOVE")
+                        }
                     }
                 }
             }

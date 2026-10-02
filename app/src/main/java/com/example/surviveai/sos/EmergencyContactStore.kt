@@ -57,5 +57,16 @@ class EmergencyContactStore(
 
         return contacts
     }
+
+    fun deleteContact(phoneNumber: String) {
+
+        val contacts = getContacts()
+
+        val updatedContacts = contacts.filter {
+            it.phoneNumber != phoneNumber
+        }
+
+        saveContacts(updatedContacts)
+    }
 }
 
