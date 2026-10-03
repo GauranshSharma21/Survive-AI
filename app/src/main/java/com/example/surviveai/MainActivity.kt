@@ -26,6 +26,8 @@ import com.example.surviveai.sos.EmergencyContactStore
 import com.example.surviveai.sos.SOSMessageSender
 import com.example.surviveai.flashlight.FlashlightManager
 import com.example.surviveai.flashlight.FlashlightScreen
+import com.example.surviveai.siren.SirenManager
+import com.example.surviveai.siren.SirenScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +59,14 @@ class MainActivity : ComponentActivity() {
                         mutableStateOf(false)
                     }
 
+                    var sirenActive by remember {
+                        mutableStateOf(false)
+                    }
+
+                    var sirenOn by remember {
+                        mutableStateOf(false)
+                    }
+
                     var sosLocationMessage by remember{
                         mutableStateOf("Location not retrieved yet")
                     }
@@ -77,6 +87,10 @@ class MainActivity : ComponentActivity() {
 
                     val flashlightManager = remember {
                         FlashlightManager(context)
+                    }
+
+                    val sirenManager = remember{
+                        SirenManager()
                     }
 
                     val locationPermissionLauncher =
@@ -199,6 +213,8 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
 
+
+
                             onBack = {
 
                                 if(flashlightOn){
@@ -207,6 +223,29 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 flashlightActive = false
+                            }
+                        )
+                    }
+
+                    else if(sirenActive){
+                        SirenScreen(
+                            sirenOn = sirenOn,
+                            onToggleSiren = {
+                                if(sirenOn){
+                                    sirenManager.stopSiren()
+                                    sirenOn = false
+                                }else{
+                                    sirenManager.startSiren()
+                                    sirenOn = true
+                                }
+                            },
+                            onBack = {
+                                if(sirenOn){
+                                    sirenManager.stopSiren()
+                                    sirenOn = false
+                                }
+
+                                sirenActive = false
                             }
                         )
                     }
@@ -230,6 +269,9 @@ class MainActivity : ComponentActivity() {
 
                             onFlashlightClick = {
                                 flashlightActive = true
+                            },
+                            onSirenClick = {
+                                sirenActive = true
                             }
                         )
                     }
